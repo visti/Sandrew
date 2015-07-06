@@ -1,0 +1,57 @@
+
+Titel-tjek i Excel
+..................
+
+Tjek for stort 'V, 'R, 'S, 'T, 'D, 'M, 'L
+
+Tjek for ~/ og ~? 
+
+Kør Python-script
+
+
+Flyt filer en mappe op
+----------------------
+
+
+find MAPPENAVN -name '*.wav' -execdir mv {} .. \;
+find . -type d -empty -exec rmdir {} \;   
+
+
+
+
+Sammenlign to rækker i EXCEL:
+.............................
+
+=ER.TAL(SAMMENLIGN(R2;Q:Q;0))
+
+R2 = Tal der skal tjekkes
+
+Q:Q = Kolonne der skal tjekkes i
+
+
+
+
+Kopier 1x fil i alle undermapper
+--------------------------------
+for dir in *; do [ -d "$dir" ] && cp coverart "$dir" ; done
+
+
+Put filer i undermapper
+--------------------------------
+find ./* -type f -maxdepth 1 -execdir  mv -i {} ./Untitled/  \;
+
+
+Showtunes i Excel-ark
+---------------------------------
+
+=HVIS(ER.TEKST(I11);C11&" (From "&TEGN(34)&I11&TEGN(34)&")";"")
+
+Sorter på tomme felter, slet og
+
+=HVIS(ER.TEKST(A1);A1;B1)
+
+
+Tjek om en værdi eksister i en range:
+--------------------------------------
+
+=IF(INDEX(Y:Y;MATCH(C5; Y:Y;));"x";"")
