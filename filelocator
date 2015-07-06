@@ -1,0 +1,90 @@
+#!/bin/bash
+
+#IFS='
+#'
+oIFS=$IFS
+IFS=$'\n'
+stty cols 100
+
+
+#"clear screen
+printf "\033c"
+
+echo ""
+echo -e "\e[41m"
+echo -e "\e[1mFILE COPIER - Sandrew Metronome \e[7m#########"
+echo -e "#########################################"
+echo ""
+echo "Location number file: $1"
+echo "Number of lines:" $(wc -l < $1)
+echo ""
+echo "File destination: $2"
+echo -e "\e[0m"
+sleep 3
+
+# Count lines in file 
+total_lines=$(wc -l < $1)
+count=1
+
+print_percent() {
+ str=$1
+ num=$2
+ v=$(printf "%-${num}s" "$str")
+ echo -e "\e[104m""${v// /#}""\e[0m"\\r
+}
+
+full_percent() {
+ str=$1
+ num=$2
+ v=$(printf "%-${num}s" "$str")
+ echo -ne "\e[41m""${v// /#}""\e[0m"\\r
+}
+
+
+while read line; #read each line from the file in the first argument
+do
+    name=$line;
+    destination=$2 #second argument is file destination
+    folder=${line:0:4} #folder name is first four digits of location number 
+    track=${line: -2} #track identifier is last two digits of location number
+    folderlocation="$(locate -r '/'$folder'$' )" #search database for folder name, returns full path
+    filelocation="$(find "$folderlocation" -type f -name "$track*wav" 2>/dev/null)" #find specific track inside folder location using track number.
+    
+    # RSYNC COMMAND – DOESN'T WORK
+    #rsync -vazhn --progress "'$filelocation'" /cygdrive/c/
+    #find "$folderlocation" -type f -name "$track*" -print0 -exec rsync -0 -vazh --progress {} /cygdrive/c/test/ \;
+    
+    # Create folders in destination – All error messages suppressed 
+    mkdir $destination/"$folder"/ 2>> /dev/null
+    mkdir $destination/"$folder"/album 2>> /dev/null
+    mkdir $destination/log  2>/dev/null
+    
+    # Give feedback on process 
+    tput civis
+    tput sc
+    echo -e "\e[1mCopying Folder: \e[33m$folder\e[0m, \e[1mTrack: \e[91m$track \e[21m\e[39m\e[0m"
+ 
+    #print current line out of total lines
+    echo -e "\e[93m"Current: $count "/" $total_lines
+    echo -e "Lines left: " $(($total_lines-$count))
+    echo -e "\e[0m"
+    percent=$(printf '%i %i' $count $total_lines | awk '{ pc=100*$1/$2; i=int(pc); print (pc-i<0.5)?i:i+1 }')
+    echo $percent"%"
+    print_percent "#" $percent
+    full_percent "#" 100
+    tput rc
+    
+    (( count++ ))
+    
+    # Copy file found earlier to specified destination
+    cp -ri "$filelocation" /cygdrive/c/test2/"$folder"/album/ 2>>$destination/log/"$folder"-"$track".txt
+    
+    # Delete all log-files that are 0 bytes (non-errors)
+    find $destination/log/ -name '*' -size 0 -print0 | xargs -0 rm 2>/dev/null
+    
+done < $1
+tput cnorm
+
+echo ""
+echo "DONE!"
+echo ""
