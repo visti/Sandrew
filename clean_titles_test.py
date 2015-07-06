@@ -1,9 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import Tkinter
-import tkFileDialog
-import tkSimpleDialog
+import tkinter
+import tkinter.filedialog
+import tkinter.simpledialog
 import re
 import time
 import datetime
@@ -26,15 +26,15 @@ noncorrectlog = 0
 
 # GUI Drawing + Focus settings
 
-root = Tkinter.Tk()
+root = tkinter.Tk()
 root.withdraw()
 root.lift()
 root.focus_force()
 
 # Choose Input/Output Files
 
-file_path = tkFileDialog.askopenfilename()
-clean_path = tkSimpleDialog.askstring('Gem renset fil',
+file_path = tkinter.filedialog.askopenfilename()
+clean_path = tkinter.simpledialog.askstring('Gem renset fil',
         'Indtast filnavn', initialvalue=file_path[:-4] + 'Clean.txt')
 lines = open(file_path, 'r').readlines()
 
@@ -55,7 +55,7 @@ def add_lines(song_title):
 def clean_title(song_title):
     match = messy_title_pat.search(song_title)
     if match:
-        print 'RETTET: ' + '"' + song_title.strip() + '"'
+        print('RETTET: ' + '"' + song_title.strip() + '"')
         logfile(song_title)
         return match.group(1) + ' ' + song_title[:match.start()] + '\n'
     else:
@@ -63,7 +63,7 @@ def clean_title(song_title):
         # If noncorrect-log is on, also output non-corrected filenames to log file
 
         if noncorrectlog == 1:
-            print 'IKKE RETTET: ' + '"' + song_title.strip() + '"'
+            print('IKKE RETTET: ' + '"' + song_title.strip() + '"')
             logfile('IKKE RETTET: ' + song_title)
             return song_title
         else:
