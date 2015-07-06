@@ -1,11 +1,19 @@
 #!/bin/bash
 
+# FILE COPIER SCRIPT / FILELOCATOR
+# usage: filelocator [location number file] [destination] [optional location number length, default 4]
+#
+# ex: ./filelocator classic-locations.txt /cygdrive/c/test2/ 5
+#
+
 #IFS='
 #'
 oIFS=$IFS
 IFS=$'\n'
 stty cols 100
 
+#location number length – Default 4
+loc_length=${3:-4}
 
 #"clear screen
 printf "\033c"
@@ -45,14 +53,10 @@ while read line; #read each line from the file in the first argument
 do
     name=$line;
     destination=$2 #second argument is file destination
-    folder=${line:0:4} #folder name is first four digits of location number 
+    folder=${line:0:$loc_length} #folder name is first four digits of location number 
     track=${line: -2} #track identifier is last two digits of location number
     folderlocation="$(locate -r '/'$folder'$' )" #search database for folder name, returns full path
     filelocation="$(find "$folderlocation" -type f -name "$track*wav" 2>/dev/null)" #find specific track inside folder location using track number.
-    
-    # RSYNC COMMAND – DOESN'T WORK
-    #rsync -vazhn --progress "'$filelocation'" /cygdrive/c/
-    #find "$folderlocation" -type f -name "$track*" -print0 -exec rsync -0 -vazh --progress {} /cygdrive/c/test/ \;
     
     # Create folders in destination – All error messages suppressed 
     mkdir $destination/"$folder"/ 2>> /dev/null
