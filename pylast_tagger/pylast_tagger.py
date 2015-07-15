@@ -79,7 +79,7 @@ def writefile(final):
 API_KEY = "8611a1f82dd20dc8ca8af7e5bc303ca9"
 API_SECRET = "a2aa6b3434e4c96a05e1433bad60486f"
 username = "visti"
-password_hash = pylast.md5("penbird")
+password_hash = pylast.md5("hunter2")
 network = pylast.LastFMNetwork(api_key = API_KEY, api_secret =
     API_SECRET, username = username, password_hash = password_hash)
 
