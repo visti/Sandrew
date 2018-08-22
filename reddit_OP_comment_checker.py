@@ -3,10 +3,10 @@ import datetime
 import time
 
 def main():
-    reddit = praw.Reddit(client_id='T80z6DeG_mJL7A',
-                        client_secret='nYV5dPqc94rPLkRaYjr1QNWDxSo',
-                        password='klonklon',
-                        username='guitar_remover_bot',
+    reddit = praw.Reddit(client_id='',
+                        client_secret='',
+                        password='',
+                        username='',
                         user_agent='my user agent')
 
     target_subreddit = reddit.subreddit('7330313')
