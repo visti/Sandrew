@@ -3,10 +3,10 @@ import datetime
 import time
 
 def main():
-    reddit = praw.Reddit(client_id='',
-                        client_secret='',
-                        password='',
-                        username='',
+    reddit = praw.Reddit(client_id='T80z6DeG_mJL7A',
+                        client_secret='nYV5dPqc94rPLkRaYjr1QNWDxSo',
+                        password='klonklon',
+                        username='guitar_remover_bot',
                         user_agent='my user agent')
 
     target_subreddit = reddit.subreddit('7330313')
@@ -47,14 +47,15 @@ def submission_checker(submission, username):
 
         if thread_age > 10:
              if submission.author in comment_authors:
-                for top_level_comment in submission.comments:
-                    if top_level_comment.author == username:
-                        top_level_comment.mod.remove()
-                        print("## Removed warning message. ##")
+                    for top_level_comment in submission.comments:
+                        if top_level_comment.author == username:
+                            top_level_comment.mod.remove()
+                            print("## Removed warning message. ##")
 
              if submission.author not in comment_authors:
-                submission.reply("Friendly reminder that all submisssions must feature a comment from the author.\nThis submission will be removed in 20 minutes if not descriptive comment is made.")
-             print("----------------------------------------------------------\n")
+                 if username not in comment_authors:
+                    submission.reply("Friendly reminder that all submisssions must feature a comment from the author.\nThis submission will be removed in 20 minutes if not descriptive comment is made.")
+                 print("----------------------------------------------------------\n")
 
 if __name__ == '__main__':
     main()
